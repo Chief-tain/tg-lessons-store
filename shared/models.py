@@ -56,9 +56,7 @@ class Users(Base):
 class Lessons(Base):
     __tablename__ = "lessons"
 
-    id: Mapped[int] = mapped_column(
-        "id", Integer, primary_key=True, autoincrement=False
-    )
+    id: Mapped[int] = mapped_column("id", Integer, primary_key=True, autoincrement=True)
     description: Mapped[str] = mapped_column("description", String, nullable=True)
     voice_urls: Mapped[list[str]] = mapped_column(
         "voice_urls", ARRAY(String), nullable=True, default=[]
@@ -72,15 +70,14 @@ class Lessons(Base):
 class Payments(Base):
     __tablename__ = "payments"
 
-    id: Mapped[int] = mapped_column(
-        "id", Integer, primary_key=True, autoincrement=False
-    )
+    id: Mapped[int] = mapped_column("id", Integer, primary_key=True, autoincrement=True)
     user_id: Mapped[int] = mapped_column(
         "user_id", Integer, nullable=False, default=None
     )
     lesson_id: Mapped[int] = mapped_column(
         "lesson_id", Integer, nullable=False, default=None
     )
+    price: Mapped[float] = mapped_column("price", FLOAT, nullable=True, default=None)
     payment_at: Mapped[datetime] = mapped_column(
         "payment_at", DateTime, server_default=func.now(), nullable=False
     )

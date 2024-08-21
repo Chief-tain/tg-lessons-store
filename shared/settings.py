@@ -19,3 +19,9 @@ PG_PORT = env.int("DB_PORT", default=5432)
 PG_DB = env("POSTGRES_DB", default="LessonsStore_db")
 PG_PROTOCOL = env("POSTGRES_PROTOCOL", default="postgresql+asyncpg")
 PG_URI_QUERY = env("POSTGRES_URI_QUERY", default=str())
+
+# redis
+REDIS_HOST = env("REDIS_HOST", default="redis")
+REDIS_DB = env("REDIS_DB", default="0")
+REDIS_PORT = env.int("REDIS_PORT", default=6379)
+REDIS_PROTOCOL = env("REDIS_PROTOCOL", default="redis")
