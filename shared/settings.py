@@ -25,3 +25,10 @@ REDIS_HOST = env("REDIS_HOST", default="redis")
 REDIS_DB = env("REDIS_DB", default="0")
 REDIS_PORT = env.int("REDIS_PORT", default=6379)
 REDIS_PROTOCOL = env("REDIS_PROTOCOL", default="redis")
+
+# minio S3
+# S3_ENDPOINT = env("S3_ENDPOINT")
+# S3_BUCKET = env("S3_BUCKET", default="bucket-media")
+# S3_ACCESS_KEY = env("S3_ACCESS_KEY")
+# S3_SECRET_KEY = env("S3_SECRET_KEY")
+# S3_SECURE = env.bool("S3_SECURE", default=False)

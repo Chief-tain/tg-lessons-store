@@ -4,13 +4,20 @@ import json
 
 from aiogram import Bot, Dispatcher
 from aiogram.utils.i18n import I18n
-from aiogram.enums import ParseMode
 from aiogram.types import BotCommand, BotCommandScopeAllPrivateChats
 
+from bot_app.modules.di import hang_out_the_flags
 from bot_app.tg import routers
 from bot_app.modules.redis_storage_custom_keys import RedisStorageCustomKeys
+from bot_app.tg.middlewares import (
+    UserServiceMiddleware,
+    PostgresqlSessionMiddleware,
+    LessonServiceMiddleware,
+    PaymentServiceMiddleware,
+)
 
 from shared import settings
+from shared.dbs.postgresql import async_session_noauto as pool
 
 logging.getLogger().setLevel(logging.INFO)
 
@@ -48,15 +55,46 @@ async def main():
 
     dp = Dispatcher(storage=storage)
 
+    session_di_middleware = PostgresqlSessionMiddleware(pool=pool)
+    dp.message.middleware(session_di_middleware)
+    dp.callback_query.middleware(session_di_middleware)
+    dp.inline_query.middleware(session_di_middleware)
+    dp.my_chat_member.middleware(session_di_middleware)
+
+    # user service middleware setup
+    user_middleware = UserServiceMiddleware()
+    dp.message.middleware(user_middleware)
+    dp.callback_query.middleware(user_middleware)
+    dp.my_chat_member.middleware(user_middleware)
+    logging.info("User middleware set up")
+
+    # lesson service middleware setup
+    lesson_middleware = LessonServiceMiddleware()
+    dp.message.middleware(lesson_middleware)
+    dp.callback_query.middleware(lesson_middleware)
+    dp.my_chat_member.middleware(lesson_middleware)
+    logging.info("Lesson middleware set up")
+
+    # payment service middleware setup
+    payment_middleware = PaymentServiceMiddleware()
+    dp.message.middleware(payment_middleware)
+    dp.callback_query.middleware(payment_middleware)
+    dp.my_chat_member.middleware(payment_middleware)
+    logging.info("Payment middleware set up")
+
     for router in routers:
         dp.include_router(router)
 
-    bot = Bot(token=settings.TELEGRAM_TOKEN, parse_mode=ParseMode.MARKDOWN_V2)
+    # add "is_using_postgres" flags to all corresponding handlers
+    hang_out_the_flags(dp)
+
+    bot = Bot(token=settings.TELEGRAM_TOKEN, parse_mode="HTML")
 
     await bot.set_my_commands(
         commands=[
             BotCommand(command="start", description="Начало работы"),
             BotCommand(command="help", description="Описание режимов работы"),
+            BotCommand(command="lessons", description="Перечень уроков"),
         ],
         scope=BotCommandScopeAllPrivateChats(),
         language_code=None,

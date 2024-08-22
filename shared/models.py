@@ -57,6 +57,7 @@ class Lessons(Base):
     __tablename__ = "lessons"
 
     id: Mapped[int] = mapped_column("id", Integer, primary_key=True, autoincrement=True)
+    name: Mapped[str] = mapped_column("name", String, nullable=True)
     description: Mapped[str] = mapped_column("description", String, nullable=True)
     voice_urls: Mapped[list[str]] = mapped_column(
         "voice_urls", ARRAY(String), nullable=True, default=[]
@@ -72,7 +73,7 @@ class Payments(Base):
 
     id: Mapped[int] = mapped_column("id", Integer, primary_key=True, autoincrement=True)
     user_id: Mapped[int] = mapped_column(
-        "user_id", Integer, nullable=False, default=None
+        "user_id", BigInteger, nullable=False, default=None
     )
     lesson_id: Mapped[int] = mapped_column(
         "lesson_id", Integer, nullable=False, default=None

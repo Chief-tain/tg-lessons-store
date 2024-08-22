@@ -1,22 +1,17 @@
 from sqlalchemy import desc, func, select, update, text, between
 from sqlalchemy.dialects.postgresql import insert
-from sqlalchemy.ext.asyncio import async_sessionmaker
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from shared.dbs.postgresql import async_session
 from shared.models import Users
 
 
 class UserService:
-    def __init__(self, pool: async_sessionmaker = async_session) -> None:
-
-        self.pool = pool
+    def __init__(self, session: AsyncSession):
+        self.session = session
 
     async def get_user(self, user_id: int) -> Users:
         stmt = select(Users).where(Users.id == user_id)
-
-        async with self.pool() as session:
-            response = await session.scalars(stmt)
-
+        response = await self.session.scalars(stmt)
         return response.one_or_none()
 
     async def create_user(
@@ -38,9 +33,8 @@ class UserService:
         stmt = stmt.values(values)
         stmt = stmt.on_conflict_do_nothing()
 
-        async with self.pool() as session:
-            await session.execute(stmt)
-            await session.commit()
+        await self.session.execute(stmt)
+        await self.session.commit()
 
     async def update_user_lessons_list(self, telegram_id: int, lesson_id: int) -> None:
 
@@ -48,14 +42,13 @@ class UserService:
             Users.id == telegram_id
         )
 
-        async with self.pool() as session:
-            bought_lessons_id = await session.scalars(bought_lessons_id_get_stmt)
-            bought_lessons_id: list = bought_lessons_id.one_or_none()
+        bought_lessons_id = await self.session.scalars(bought_lessons_id_get_stmt)
+        bought_lessons_id: list = bought_lessons_id.one_or_none()
 
-            bought_lessons_id.append(lesson_id)
+        bought_lessons_id.append(lesson_id)
 
-            bought_lessons_id_upd_stmt = update(Users).values(
-                bought_lessons_id=bought_lessons_id
-            )
-            await session.execute(bought_lessons_id_upd_stmt)
-            await session.commit()
+        bought_lessons_id_upd_stmt = update(Users).values(
+            bought_lessons_id=bought_lessons_id
+        )
+        await self.session.execute(bought_lessons_id_upd_stmt)
+        await self.session.commit()
