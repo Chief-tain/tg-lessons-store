@@ -10,14 +10,14 @@ def manager():
     keyboard = [
         [
             InlineKeyboardButton(
-                text="🆘 Служба поддержки 🆘",
-                url="https://t.me/Chief_train",  # todo: emplace
+                text=f"✅ Начать ✅",
+                callback_data=BackData().pack(),
             )
         ],
         [
             InlineKeyboardButton(
-                text=f"✅ Начать ✅",
-                callback_data=BackData().pack(),
+                text="🆘 Служба поддержки 🆘",
+                url="https://t.me/Chief_train",  # todo: emplace
             )
         ],
     ]
