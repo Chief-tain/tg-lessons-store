@@ -3,15 +3,15 @@ from aiogram.utils.keyboard import (
     InlineKeyboardMarkup,
 )
 
-from bot_app.tg.callbacks.lessons import HelpData, BackData
+from bot_app.tg.callbacks.lessons import HelpData, BackData, ChooseModeData
 
 
-def manager():
+def start_and_manager():
     keyboard = [
         [
             InlineKeyboardButton(
                 text=f"✅ Начать ✅",
-                callback_data=BackData().pack(),
+                callback_data=ChooseModeData().pack(),
             )
         ],
         [
@@ -24,21 +24,21 @@ def manager():
     return InlineKeyboardMarkup(inline_keyboard=keyboard, resize_keyboard=True)
 
 
-def manager_and_help():
+def start_and_manager_and_help():
     keyboard = [
         [
             InlineKeyboardButton(
                 text=f"✅ Начать ✅",
-                callback_data=BackData().pack(),
+                callback_data=ChooseModeData().pack(),
             )
         ],
         [
             InlineKeyboardButton(
-                text=f"❓ Ответы на вопросы ❓",
+                text=f"❓ Вопросы ❓",
                 callback_data=HelpData().pack(),
             ),
             InlineKeyboardButton(
-                text="🆘 Служба поддержки 🆘",
+                text="🆘 Поддержка 🆘",
                 url="https://t.me/Chief_train",  # todo: emplace
             ),
         ],

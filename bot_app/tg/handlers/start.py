@@ -9,7 +9,7 @@ from bot_app.application.lesson_service import LessonService
 from bot_app.application.payment_service import PaymentService
 from bot_app.modules import messages
 from bot_app.tg.states.states import States
-from bot_app.tg.keyboards.manager import manager_and_help
+from bot_app.tg.keyboards.manager import start_and_manager_and_help
 
 
 start_router = Router()
@@ -24,7 +24,7 @@ async def greetings(
     payment_service: PaymentService,
 ):
 
-    logging.info("User pressed /start")
+    logging.info(f"User {message.from_user.username} pressed /start")
 
     data = await state.get_data()
     from_user = message.from_user
@@ -54,5 +54,7 @@ async def greetings(
     #     telegram_id=from_user.id, lesson_id=1, price=400
     # )
 
-    await message.answer(messages.START_MESSAGE, reply_markup=manager_and_help())
-    await state.set_state(States.help)
+    await message.answer(
+        messages.START_MESSAGE, reply_markup=start_and_manager_and_help()
+    )
+    # await state.set_state(States.help)

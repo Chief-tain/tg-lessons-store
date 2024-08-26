@@ -94,7 +94,10 @@ async def main():
         commands=[
             BotCommand(command="start", description="Начало работы"),
             BotCommand(command="help", description="Описание режимов работы"),
-            BotCommand(command="lessons", description="Перечень уроков"),
+            BotCommand(
+                command="english_lessons", description="Уроки английского языка"
+            ),
+            BotCommand(command="chinese_lessons", description="Уроки китайского языка"),
         ],
         scope=BotCommandScopeAllPrivateChats(),
         language_code=None,

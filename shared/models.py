@@ -57,6 +57,7 @@ class Lessons(Base):
     __tablename__ = "lessons"
 
     id: Mapped[int] = mapped_column("id", Integer, primary_key=True, autoincrement=True)
+    language: Mapped[str] = mapped_column("language", String, nullable=True)
     name: Mapped[str] = mapped_column("name", String, nullable=True)
     description: Mapped[str] = mapped_column("description", String, nullable=True)
     voice_urls: Mapped[list[str]] = mapped_column(
@@ -66,6 +67,9 @@ class Lessons(Base):
         "doc_urls", ARRAY(String), nullable=True, default=[]
     )
     price: Mapped[float] = mapped_column("price", FLOAT, nullable=True, default=None)
+    is_available: Mapped[bool] = mapped_column(
+        "is_available", Boolean, nullable=True, default=True
+    )
 
 
 class Payments(Base):

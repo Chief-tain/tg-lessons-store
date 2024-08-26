@@ -3,17 +3,45 @@ from aiogram.utils.keyboard import (
     InlineKeyboardMarkup,
 )
 
-from bot_app.tg.callbacks.lessons import Lessondata, BackData, BuyLessonData, HelpData
+from bot_app.tg.callbacks.lessons import (
+    Lessondata,
+    BackData,
+    BuyLessonData,
+    HelpData,
+    ChineseModeData,
+    EnglishModeDaata,
+    TotalBackData,
+)
 
 from shared.models import Lessons
 
 
-def lessons(lessons: list[Lessons]):
+language_smile = {"en": "🇬🇧", "zh": "🇨🇳"}
+
+
+def choose_lang_mode():
+    keyboard = [
+        [
+            InlineKeyboardButton(
+                text=f"🇬🇧 Английский 🇬🇧",
+                callback_data=EnglishModeDaata().pack(),
+            ),
+            InlineKeyboardButton(
+                text=f"🇨🇳 Китайский 🇨🇳",
+                callback_data=ChineseModeData().pack(),
+            ),
+        ]
+    ]
+
+    return InlineKeyboardMarkup(inline_keyboard=keyboard, resize_keyboard=True)
+
+
+def lessons(lessons: list[Lessons], language: str):
 
     keyboard = [
         [
             InlineKeyboardButton(
-                text=f"🇨🇳 {lesson.name} - {int(lesson.price)}₽",
+                text=f"{language_smile[language]} {lesson.name} - {int(lesson.price)}₽",
                 callback_data=Lessondata(lesson_id=lesson.id).pack(),
             )
         ]
@@ -22,11 +50,19 @@ def lessons(lessons: list[Lessons]):
     keyboard.append(
         [
             InlineKeyboardButton(
-                text=f"❓ Ответы на вопросы ❓",
+                text=f"🔙 Назад 🔙",
+                callback_data=TotalBackData().pack(),
+            )
+        ]
+    )
+    keyboard.append(
+        [
+            InlineKeyboardButton(
+                text=f"❓ Вопросы ❓",
                 callback_data=HelpData().pack(),
             ),
             InlineKeyboardButton(
-                text="🆘 Служба поддержки 🆘",
+                text="🆘 Поддержка 🆘",
                 url="https://t.me/Chief_train",  # todo: emplace
             ),
         ],
