@@ -67,20 +67,20 @@ services:
     networks:
       - app
 
-  # file-storage:
-  #   container_name: "file-storage"
-  #   image: minio/minio
-  #   command: server --console-address ":9091" /data
-  #   ports:
-  #     - "9091:9091"
-  #     - "9000:9000"
-  #   volumes:
-  #     - "./data/minio:/data"
-  #   environment:
-  #     MINIO_ROOT_USER: "root"
-  #     MINIO_ROOT_PASSWORD: "123qweasd"
-  #   networks:
-  #     - app
+  file-storage:
+    container_name: "file-storage"
+    image: minio/minio
+    command: server --console-address ":9091" /data
+    ports:
+      - "9091:9091"
+      - "9000:9000"
+    volumes:
+      - "./data/minio:/data"
+    environment:
+      MINIO_ROOT_USER: "root"
+      MINIO_ROOT_PASSWORD: "123qweasd"
+    networks:
+      - app
 
 
 volumes:

@@ -1,4 +1,5 @@
 aiogram[i18n]==3.3.0
 redis==5.1.0a1
+miniopy-async==1.19
 
 -r ../shared/requirements.txt

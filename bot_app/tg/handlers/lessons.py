@@ -6,7 +6,7 @@ from aiogram.fsm.context import FSMContext
 
 from bot_app.application.user_service import UserService
 from bot_app.application.lesson_service import LessonService
-from bot_app.application.payment_service import PaymentService
+from bot_app.application.minio_service import OrderMediaRepository
 from bot_app.modules import messages
 from bot_app.tg.states.states import States
 import bot_app.tg.keyboards.lessons as lessons_kb
@@ -19,6 +19,7 @@ from bot_app.tg.callbacks.lessons import (
     ChooseModeData,
     TotalBackData,
 )
+from shared.settings import S3_BUCKET
 
 
 lessons_router = Router()
@@ -117,7 +118,8 @@ async def get_back_lessons(
     language = (await state.get_data())["language"]
     lessons = await lesson_service.get_lessons(language=language)
 
-    await callback.message.edit_text(
+    await callback.message.delete()
+    await callback.message.answer(
         text=messages.LESSONS_MESSAGE,
         reply_markup=lessons_kb.lessons(lessons=lessons, language=language),
     )
@@ -128,12 +130,19 @@ async def get_lesson(
     callback: types.CallbackQuery,
     callback_data: Lessondata,
     lesson_service: LessonService,
+    order_media_minio: OrderMediaRepository,
 ):
     await callback.answer()
     lesson = await lesson_service.get_lesson(lesson_id=callback_data.lesson_id)
 
-    await callback.message.edit_text(
-        text=messages.LESSON_DETAILS_MESSAGE.format(
+    media, metadata = await order_media_minio.get_safe_objects_by_name(
+        bucket_id=S3_BUCKET, object_name="2024-08-26 21.49.16.jpg"
+    )
+
+    await callback.message.delete()
+    await callback.message.answer_photo(
+        photo=types.BufferedInputFile(file=media, filename="picture"),
+        caption=messages.LESSON_DETAILS_MESSAGE.format(
             name=lesson.name, description=lesson.description, price=int(lesson.price)
         ),
         reply_markup=lessons_kb.lesson(lesson=lesson),
