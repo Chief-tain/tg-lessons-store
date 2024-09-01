@@ -11,6 +11,7 @@ from bot_app.tg.callbacks.lessons import (
     ChineseModeData,
     EnglishModeDaata,
     TotalBackData,
+    GetDemoData,
 )
 
 from shared.models import Lessons
@@ -76,6 +77,12 @@ def lesson(lesson: Lessons):
     keyboard = [
         [
             InlineKeyboardButton(
+                text=f"❓ Демо-версия ❓",
+                callback_data=GetDemoData(lesson_id=lesson.id).pack(),
+            )
+        ],
+        [
+            InlineKeyboardButton(
                 text=f"🔙 Назад 🔙",
                 callback_data=BackData().pack(),
             ),
@@ -83,7 +90,7 @@ def lesson(lesson: Lessons):
                 text=f"✅ Купить ✅",
                 callback_data=BuyLessonData(lesson_id=lesson.id).pack(),
             ),
-        ]
+        ],
     ]
 
     return InlineKeyboardMarkup(inline_keyboard=keyboard, resize_keyboard=True)

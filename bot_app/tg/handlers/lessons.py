@@ -18,6 +18,7 @@ from bot_app.tg.callbacks.lessons import (
     ChineseModeData,
     ChooseModeData,
     TotalBackData,
+    GetDemoData,
 )
 from shared.settings import S3_BUCKET
 
@@ -147,3 +148,17 @@ async def get_lesson(
         ),
         reply_markup=lessons_kb.lesson(lesson=lesson),
     )
+
+
+@lessons_router.callback_query(GetDemoData.filter())
+async def get_demo(
+    callback: types.CallbackQuery,
+    callback_data: GetDemoData,
+    lesson_service: LessonService,
+    order_media_minio: OrderMediaRepository,
+):
+    await callback.answer()
+    lesson = await lesson_service.get_lesson(lesson_id=callback_data.lesson_id)
+
+    for i in range(1, 4):
+        await callback.message.answer(text=f"Демо-документ №{i} урока {lesson.name}")

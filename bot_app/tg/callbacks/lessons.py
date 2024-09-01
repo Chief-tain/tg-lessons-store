@@ -31,3 +31,11 @@ class EnglishModeDaata(CallbackData, prefix="english"):
 
 class ChineseModeData(CallbackData, prefix="chinese"):
     pass
+
+
+class GetDemoData(CallbackData, prefix="demo"):
+    lesson_id: int
+
+
+class PersonalAccountData(CallbackData, prefix="personal_account"):
+    pass

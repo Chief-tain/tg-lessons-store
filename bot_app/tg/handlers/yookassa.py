@@ -57,3 +57,8 @@ async def processing_pay(message: types.Message):
 
     # await message.answer(str(invoice_payload) + "DAA")
     await message.answer(text="Оплата успешно произведена!")
+
+    # lesson = await lesson_service.get_lesson(lesson_id=callback_data.lesson_id)
+
+    for i in range(1, 4):
+        await message.answer(text=f"Документ №{i}")
