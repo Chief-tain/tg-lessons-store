@@ -100,6 +100,7 @@ async def main():
     await bot.set_my_commands(
         commands=[
             BotCommand(command="start", description="Начало работы"),
+            BotCommand(command="personal_account", description="Личный кабинет"),
             BotCommand(command="help", description="Описание режимов работы"),
             BotCommand(
                 command="english_lessons", description="Уроки английского языка"

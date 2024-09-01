@@ -3,7 +3,12 @@ from aiogram.utils.keyboard import (
     InlineKeyboardMarkup,
 )
 
-from bot_app.tg.callbacks.lessons import HelpData, BackData, ChooseModeData
+from bot_app.tg.callbacks.lessons import (
+    HelpData,
+    BackData,
+    ChooseModeData,
+    PersonalAccountData,
+)
 
 
 def start_and_manager():
@@ -12,6 +17,12 @@ def start_and_manager():
             InlineKeyboardButton(
                 text=f"✅ Начать ✅",
                 callback_data=ChooseModeData().pack(),
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text=f"🧍‍♂ Личный кабинет 🧍‍♀",
+                callback_data=PersonalAccountData().pack(),
             )
         ],
         [
@@ -30,6 +41,12 @@ def start_and_manager_and_help():
             InlineKeyboardButton(
                 text=f"✅ Начать ✅",
                 callback_data=ChooseModeData().pack(),
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text=f"🧍‍♂ Личный кабинет 🧍‍♀",
+                callback_data=PersonalAccountData().pack(),
             )
         ],
         [
