@@ -14,6 +14,7 @@ from bot_app.tg.middlewares import (
     PostgresqlSessionMiddleware,
     LessonServiceMiddleware,
     PaymentServiceMiddleware,
+    MinioMediaServiceMiddleware,
 )
 
 from shared import settings
@@ -81,6 +82,12 @@ async def main():
     dp.callback_query.middleware(payment_middleware)
     dp.my_chat_member.middleware(payment_middleware)
     logging.info("Payment middleware set up")
+
+    # minio media middleware set up
+    minio_media_middleware = MinioMediaServiceMiddleware()
+    dp.message.middleware(minio_media_middleware)
+    dp.callback_query.middleware(minio_media_middleware)
+    logging.info("Minio Media Service Middleware set up")
 
     for router in routers:
         dp.include_router(router)
