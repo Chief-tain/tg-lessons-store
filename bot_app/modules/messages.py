@@ -39,7 +39,7 @@ LESSONS_MESSAGE = (
 LESSON_DETAILS_MESSAGE = (
     "<b>📘 Урок: {name}</b>\n\n"
     "<b>Описание:</b> {description}\n\n"
-    "<b>💰 Стоимость:</b> {price} шт.\n\n"
+    "<b>💰 Стоимость:</b> {price} руб.\n\n"
     "<b>👉 Готовы приобрести? Нажмите на кнопку ниже!</b>\n"
 )
 
@@ -48,6 +48,6 @@ PERSONAL_ACCOUNT_MESSAGE = (
     "<b>📘 Имя:</b> {username}\n"
     "<b>🌍 Язык:</b> {language_code}\n"
     "<b>📅 Дата регистрации:</b> {registered_at}\n"
-    "<b>💰 Куплено уроков:</b> {bouhgt_amount} руб.\n\n"
+    "<b>💰 Куплено уроков:</b> {bouhgt_amount} шт.\n\n"
     "<b>👇 Ваши уроки! 👇</b>"
 )

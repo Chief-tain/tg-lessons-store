@@ -36,19 +36,24 @@ class UserService:
         await self.session.execute(stmt)
         await self.session.commit()
 
-    async def update_user_lessons_list(self, telegram_id: int, lesson_id: int) -> None:
-
+    async def get_user_lessons_id_list(self, telegram_id: int) -> None:
         bought_lessons_id_get_stmt = select(Users.bought_lessons_id).where(
             Users.id == telegram_id
         )
+        bought_lessons_ids = await self.session.scalars(bought_lessons_id_get_stmt)
+        bought_lessons_ids: list[int] = bought_lessons_ids.one_or_none()
+        return bought_lessons_ids
 
-        bought_lessons_id = await self.session.scalars(bought_lessons_id_get_stmt)
-        bought_lessons_id: list = bought_lessons_id.one_or_none()
+    async def update_user_lessons_list(self, telegram_id: int, lesson_id: int) -> None:
 
-        bought_lessons_id.append(lesson_id)
+        bought_lessons_ids: list[int] = await self.get_user_lessons_id_list(
+            telegram_id=telegram_id
+        )
+        bought_lessons_ids.append(lesson_id)
 
-        bought_lessons_id_upd_stmt = update(Users).values(
-            bought_lessons_id=bought_lessons_id
+        bought_lessons_id_upd_stmt = (
+            update(Users)
+            .where(Users.id == telegram_id)
+            .values(bought_lessons_id=bought_lessons_ids)
         )
         await self.session.execute(bought_lessons_id_upd_stmt)
-        await self.session.commit()

@@ -12,6 +12,7 @@ from bot_app.tg.callbacks.lessons import (
     EnglishModeDaata,
     TotalBackData,
     GetDemoData,
+    PersonalAccountData,
 )
 
 from shared.models import Lessons
@@ -31,7 +32,23 @@ def choose_lang_mode():
                 text=f"🇨🇳 Китайский 🇨🇳",
                 callback_data=ChineseModeData().pack(),
             ),
-        ]
+        ],
+        [
+            InlineKeyboardButton(
+                text=f"🧍‍♂ Личный кабинет 🧍‍♀",
+                callback_data=PersonalAccountData().pack(),
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text=f"❓ Вопросы ❓",
+                callback_data=HelpData().pack(),
+            ),
+            InlineKeyboardButton(
+                text="🆘 Поддержка 🆘",
+                url="https://t.me/Chief_train",  # todo: emplace
+            ),
+        ],
     ]
 
     return InlineKeyboardMarkup(inline_keyboard=keyboard, resize_keyboard=True)

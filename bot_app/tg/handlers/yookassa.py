@@ -1,11 +1,13 @@
 import logging
 
 from aiogram import F, Router, types, Bot
-from aiogram.utils.i18n import gettext as _, lazy_gettext as __
 from aiogram.types import LabeledPrice
+from aiogram.fsm.context import FSMContext
 
 from bot_app.tg.callbacks.lessons import BuyLessonData
 from bot_app.application.lesson_service import LessonService
+from bot_app.application.user_service import UserService
+from bot_app.application.payment_service import PaymentService
 
 from shared.settings import YOO_KASSA_TOKEN
 from shared.models import Lessons
@@ -20,6 +22,7 @@ async def manager(
     callback: types.CallbackQuery,
     callback_data: BuyLessonData,
     lesson_service: LessonService,
+    state: FSMContext,
     bot: Bot,
 ):
     logging.info("Manager get contact")
@@ -39,6 +42,9 @@ async def manager(
         protect_content=True,
     )
 
+    data = await state.update_data({"currnt_lesson_id": lesson.id})
+    logging.info(f"data: {data}")
+
 
 @yookass_router.pre_checkout_query()
 async def processing_pre_checkout_query(
@@ -51,14 +57,29 @@ async def processing_pre_checkout_query(
 
 
 @yookass_router.message(types.ContentType.SUCCESSFUL_PAYMENT == F.content_type)
-async def processing_pay(message: types.Message):
+async def processing_pay(
+    message: types.Message,
+    state: FSMContext,
+    lesson_service: LessonService,
+    user_service: UserService,
+    payment_service: PaymentService,
+):
     """Main payment processing function"""
     invoice_payload = message.successful_payment.invoice_payload
-
     # await message.answer(str(invoice_payload) + "DAA")
-    await message.answer(text="Оплата успешно произведена!")
+    await message.answer(text="✅ Оплата успешно произведена! ✅")
 
-    # lesson = await lesson_service.get_lesson(lesson_id=callback_data.lesson_id)
+    currnt_lesson_id = (await state.get_data())["currnt_lesson_id"]
+
+    lesson = await lesson_service.get_lesson(lesson_id=currnt_lesson_id)
+
+    await user_service.update_user_lessons_list(
+        telegram_id=message.from_user.id, lesson_id=lesson.id
+    )
+
+    await payment_service.create_payment(
+        telegram_id=message.from_user.id, lesson_id=lesson.id, price=lesson.price
+    )
 
     for i in range(1, 4):
-        await message.answer(text=f"Документ №{i}")
+        await message.answer(text=f"Документ №{i} из урока {lesson.name}")

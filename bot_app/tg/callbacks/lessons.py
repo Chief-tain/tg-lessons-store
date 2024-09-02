@@ -1,6 +1,10 @@
 from aiogram.filters.callback_data import CallbackData
 
 
+class NullData(CallbackData, prefix="null"):
+    pass
+
+
 class Lessondata(CallbackData, prefix="lesson"):
     lesson_id: int
 
