@@ -51,3 +51,13 @@ PERSONAL_ACCOUNT_MESSAGE = (
     "<b>💰 Куплено уроков:</b> {bouhgt_amount} шт.\n\n"
     "<b>👇 Ваши уроки! 👇</b>"
 )
+
+ENGLISH_LANGUAHE_MESSAGE = "🇬🇧 Английский 🇬🇧"
+CHINESE_LANGUAGE_MESSAGE = "🇨🇳 Китайский 🇨🇳"
+PA_MESSAGE = "🧍‍♂ Личный кабинет 🧍‍♀"
+QUESTIONS_MESSAGE = "❓ Вопросы ❓"
+SUPPORT_MESSAGE = "🆘 Поддержка 🆘"
+BACK_MESSAGE = "🔙 Назад 🔙"
+DEMO_VERSION_MESSAGE = "❓ Демо-версия ❓"
+BUY_MESSAGE = "✅ Купить ✅"
+BEGIN_MESSAGE = "✅ Начать ✅"

@@ -35,3 +35,9 @@ S3_SECURE = env.bool("S3_SECURE", default=False)
 
 # yookassa
 YOO_KASSA_TOKEN = env("YOO_KASSA_TOKEN")
+
+# extra
+SUPPORT_ACCOUNT = env("SUPPORT_ACCOUNT")
+
+# admins telegram id
+ADMINS_TG_ID = [int(admin_id) for admin_id in env.list("ADMINS_TG_ID", default=[])]

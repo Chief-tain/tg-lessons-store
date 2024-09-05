@@ -5,10 +5,7 @@ from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 
 from bot_app.application.user_service import UserService
-from bot_app.application.lesson_service import LessonService
-from bot_app.application.payment_service import PaymentService
 from bot_app.modules import messages
-from bot_app.tg.states.states import States
 from bot_app.tg.keyboards.manager import start_and_manager_and_help
 
 
@@ -20,8 +17,6 @@ async def greetings(
     message: types.Message,
     user_service: UserService,
     state: FSMContext,
-    lesson_service: LessonService,
-    payment_service: PaymentService,
 ):
 
     logging.info(f"User {message.from_user.username} pressed /start")
@@ -42,19 +37,6 @@ async def greetings(
         language_code=from_user.language_code,
     )
 
-    # await lesson_service.create_lessons(
-    #     name="test",
-    #     description="sample",
-    #     voice_urls=["sasdasdsa", "dasdas"],
-    #     doc_urls=["sasdasdsa", "dasdas"],
-    #     price=400,
-    # )
-
-    # await payment_service.create_payment(
-    #     telegram_id=from_user.id, lesson_id=1, price=400
-    # )
-
     await message.answer(
         messages.START_MESSAGE, reply_markup=start_and_manager_and_help()
     )
-    # await state.set_state(States.help)

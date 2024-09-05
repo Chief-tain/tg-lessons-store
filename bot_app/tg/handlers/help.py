@@ -1,9 +1,7 @@
 from aiogram import F, Router, types, exceptions
 from aiogram.filters import Command
-from aiogram.fsm.context import FSMContext
 
 from bot_app.modules import messages
-from bot_app.tg.states.states import States
 from bot_app.tg.keyboards.manager import start_and_manager
 from bot_app.tg.callbacks.lessons import HelpData
 

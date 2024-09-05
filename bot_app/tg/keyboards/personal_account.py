@@ -15,6 +15,8 @@ from bot_app.tg.callbacks.lessons import (
     NullData,
 )
 
+import bot_app.modules.messages as messages
+from shared.settings import SUPPORT_ACCOUNT
 from shared.models import Lessons
 
 
@@ -35,12 +37,12 @@ def get_lessons_buttons(lessons: list[Lessons]):
     keyboard.append(
         [
             InlineKeyboardButton(
-                text=f"❓ Вопросы ❓",
+                text=messages.QUESTIONS_MESSAGE,
                 callback_data=HelpData().pack(),
             ),
             InlineKeyboardButton(
-                text="🆘 Поддержка 🆘",
-                url="https://t.me/Chief_train",  # todo: emplace
+                text=messages.SUPPORT_MESSAGE,
+                url=SUPPORT_ACCOUNT,
             ),
         ],
     )

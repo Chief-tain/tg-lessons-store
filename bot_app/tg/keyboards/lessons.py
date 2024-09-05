@@ -15,7 +15,9 @@ from bot_app.tg.callbacks.lessons import (
     PersonalAccountData,
 )
 
+import bot_app.modules.messages as messages
 from shared.models import Lessons
+from shared.settings import SUPPORT_ACCOUNT
 
 
 language_smile = {"en": "🇬🇧", "zh": "🇨🇳"}
@@ -25,28 +27,28 @@ def choose_lang_mode():
     keyboard = [
         [
             InlineKeyboardButton(
-                text=f"🇬🇧 Английский 🇬🇧",
+                text=messages.ENGLISH_LANGUAHE_MESSAGE,
                 callback_data=EnglishModeDaata().pack(),
             ),
             InlineKeyboardButton(
-                text=f"🇨🇳 Китайский 🇨🇳",
+                text=messages.CHINESE_LANGUAGE_MESSAGE,
                 callback_data=ChineseModeData().pack(),
             ),
         ],
         [
             InlineKeyboardButton(
-                text=f"🧍‍♂ Личный кабинет 🧍‍♀",
+                text=messages.PA_MESSAGE,
                 callback_data=PersonalAccountData().pack(),
             )
         ],
         [
             InlineKeyboardButton(
-                text=f"❓ Вопросы ❓",
+                text=messages.QUESTIONS_MESSAGE,
                 callback_data=HelpData().pack(),
             ),
             InlineKeyboardButton(
-                text="🆘 Поддержка 🆘",
-                url="https://t.me/Chief_train",  # todo: emplace
+                text=messages.SUPPORT_MESSAGE,
+                url=SUPPORT_ACCOUNT,
             ),
         ],
     ]
@@ -68,7 +70,7 @@ def lessons(lessons: list[Lessons], language: str):
     keyboard.append(
         [
             InlineKeyboardButton(
-                text=f"🔙 Назад 🔙",
+                text=messages.BACK_MESSAGE,
                 callback_data=TotalBackData().pack(),
             )
         ]
@@ -76,12 +78,12 @@ def lessons(lessons: list[Lessons], language: str):
     keyboard.append(
         [
             InlineKeyboardButton(
-                text=f"❓ Вопросы ❓",
+                text=messages.QUESTIONS_MESSAGE,
                 callback_data=HelpData().pack(),
             ),
             InlineKeyboardButton(
-                text="🆘 Поддержка 🆘",
-                url="https://t.me/Chief_train",  # todo: emplace
+                text=messages.SUPPORT_MESSAGE,
+                url=SUPPORT_ACCOUNT,
             ),
         ],
     )
@@ -94,17 +96,17 @@ def lesson(lesson: Lessons):
     keyboard = [
         [
             InlineKeyboardButton(
-                text=f"❓ Демо-версия ❓",
+                text=messages.DEMO_VERSION_MESSAGE,
                 callback_data=GetDemoData(lesson_id=lesson.id).pack(),
             )
         ],
         [
             InlineKeyboardButton(
-                text=f"🔙 Назад 🔙",
+                text=messages.BACK_MESSAGE,
                 callback_data=BackData().pack(),
             ),
             InlineKeyboardButton(
-                text=f"✅ Купить ✅",
+                text=messages.BUY_MESSAGE,
                 callback_data=BuyLessonData(lesson_id=lesson.id).pack(),
             ),
         ],

@@ -14,8 +14,6 @@ from shared.models import Lessons
 
 yookass_router = Router()
 
-# 1111 1111 1111 1026, 12/22, CVC 000
-
 
 @yookass_router.callback_query(BuyLessonData.filter())
 async def manager(

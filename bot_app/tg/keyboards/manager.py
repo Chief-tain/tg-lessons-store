@@ -9,26 +9,28 @@ from bot_app.tg.callbacks.lessons import (
     ChooseModeData,
     PersonalAccountData,
 )
+import bot_app.modules.messages as messages
+from shared.settings import SUPPORT_ACCOUNT
 
 
 def start_and_manager():
     keyboard = [
         [
             InlineKeyboardButton(
-                text=f"✅ Начать ✅",
+                text=messages.BEGIN_MESSAGE,
                 callback_data=ChooseModeData().pack(),
             )
         ],
         [
             InlineKeyboardButton(
-                text=f"🧍‍♂ Личный кабинет 🧍‍♀",
+                text=messages.PA_MESSAGE,
                 callback_data=PersonalAccountData().pack(),
             )
         ],
         [
             InlineKeyboardButton(
-                text="🆘 Служба поддержки 🆘",
-                url="https://t.me/Chief_train",  # todo: emplace
+                text=messages.SUPPORT_MESSAGE,
+                url=SUPPORT_ACCOUNT,
             )
         ],
     ]
@@ -39,24 +41,24 @@ def start_and_manager_and_help():
     keyboard = [
         [
             InlineKeyboardButton(
-                text=f"✅ Начать ✅",
+                text=messages.BEGIN_MESSAGE,
                 callback_data=ChooseModeData().pack(),
             )
         ],
         [
             InlineKeyboardButton(
-                text=f"🧍‍♂ Личный кабинет 🧍‍♀",
+                text=messages.PA_MESSAGE,
                 callback_data=PersonalAccountData().pack(),
             )
         ],
         [
             InlineKeyboardButton(
-                text=f"❓ Вопросы ❓",
+                text=messages.QUESTIONS_MESSAGE,
                 callback_data=HelpData().pack(),
             ),
             InlineKeyboardButton(
-                text="🆘 Поддержка 🆘",
-                url="https://t.me/Chief_train",  # todo: emplace
+                text=messages.SUPPORT_MESSAGE,
+                url=SUPPORT_ACCOUNT,  # todo: emplace
             ),
         ],
     ]
