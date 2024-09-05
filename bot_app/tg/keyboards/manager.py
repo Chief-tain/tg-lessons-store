@@ -5,7 +5,6 @@ from aiogram.utils.keyboard import (
 
 from bot_app.tg.callbacks.lessons import (
     HelpData,
-    BackData,
     ChooseModeData,
     PersonalAccountData,
 )

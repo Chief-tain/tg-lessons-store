@@ -5,6 +5,10 @@ class NullData(CallbackData, prefix="null"):
     pass
 
 
+class BoughtLessonData(CallbackData, prefix="bought_lesson"):
+    lesson_id: int
+
+
 class Lessondata(CallbackData, prefix="lesson"):
     lesson_id: int
 

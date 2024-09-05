@@ -20,9 +20,6 @@ from shared.models import Lessons
 from shared.settings import SUPPORT_ACCOUNT
 
 
-language_smile = {"en": "🇬🇧", "zh": "🇨🇳"}
-
-
 def choose_lang_mode():
     keyboard = [
         [
@@ -61,7 +58,7 @@ def lessons(lessons: list[Lessons], language: str):
     keyboard = [
         [
             InlineKeyboardButton(
-                text=f"{language_smile[language]} {lesson.name} - {int(lesson.price)}₽",
+                text=f"{messages.language_smile[language]} {lesson.name} - {int(lesson.price)}₽",
                 callback_data=Lessondata(lesson_id=lesson.id).pack(),
             )
         ]

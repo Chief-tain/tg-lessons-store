@@ -1,18 +1,13 @@
-import logging
-
 from aiogram import F, Router, types, exceptions
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 
-from bot_app.application.user_service import UserService
 from bot_app.application.lesson_service import LessonService
 from bot_app.application.minio_service import OrderMediaRepository
 from bot_app.modules import messages
-from bot_app.tg.states.states import States
 import bot_app.tg.keyboards.lessons as lessons_kb
 from bot_app.tg.callbacks.lessons import (
     Lessondata,
-    BuyLessonData,
     BackData,
     EnglishModeDaata,
     ChineseModeData,
