@@ -155,5 +155,12 @@ async def get_demo(
     await callback.answer()
     lesson = await lesson_service.get_lesson(lesson_id=callback_data.lesson_id)
 
-    for i in range(1, 4):
-        await callback.message.answer(text=f"Демо-документ №{i} урока {lesson.name}")
+    for doc_url in lesson.doc_urls:
+
+        media, metadata = await order_media_minio.get_safe_objects_by_name(
+            bucket_id=S3_BUCKET, object_name=doc_url
+        )
+
+        await callback.message.answer_document(
+            document=types.BufferedInputFile(file=media, filename=doc_url)
+        )

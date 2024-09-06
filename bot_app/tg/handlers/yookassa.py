@@ -8,8 +8,9 @@ from bot_app.tg.callbacks.lessons import BuyLessonData
 from bot_app.application.lesson_service import LessonService
 from bot_app.application.user_service import UserService
 from bot_app.application.payment_service import PaymentService
+from bot_app.application.minio_service import OrderMediaRepository
 
-from shared.settings import YOO_KASSA_TOKEN
+from shared.settings import YOO_KASSA_TOKEN, S3_BUCKET
 from shared.models import Lessons
 
 yookass_router = Router()
@@ -61,6 +62,7 @@ async def processing_pay(
     lesson_service: LessonService,
     user_service: UserService,
     payment_service: PaymentService,
+    order_media_minio: OrderMediaRepository,
 ):
     """Main payment processing function"""
     invoice_payload = message.successful_payment.invoice_payload
@@ -68,7 +70,6 @@ async def processing_pay(
     await message.answer(text="✅ Оплата успешно произведена! ✅")
 
     currnt_lesson_id = (await state.get_data())["currnt_lesson_id"]
-
     lesson = await lesson_service.get_lesson(lesson_id=currnt_lesson_id)
 
     await user_service.update_user_lessons_list(
@@ -79,5 +80,12 @@ async def processing_pay(
         telegram_id=message.from_user.id, lesson_id=lesson.id, price=lesson.price
     )
 
-    for i in range(1, 4):
-        await message.answer(text=f"Документ №{i} из урока {lesson.name}")
+    for doc_url in lesson.doc_urls:
+
+        media, metadata = await order_media_minio.get_safe_objects_by_name(
+            bucket_id=S3_BUCKET, object_name=doc_url
+        )
+
+        await message.answer_document(
+            document=types.BufferedInputFile(file=media, filename=doc_url)
+        )

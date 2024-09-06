@@ -54,6 +54,8 @@ PERSONAL_ACCOUNT_MESSAGE = (
     "<b>👇 Ваши уроки! 👇</b>"
 )
 
+WAIT_FOR_SENDING_MESSAGE = "⏳ Пожалуйста, подождите, <b>отправляем материал!<b> ⚡"
+
 ENGLISH_LANGUAHE_MESSAGE = "🇬🇧 Английский 🇬🇧"
 CHINESE_LANGUAGE_MESSAGE = "🇨🇳 Китайский 🇨🇳"
 PA_MESSAGE = "🧍‍♂ Личный кабинет 🧍‍♀"
