@@ -12,11 +12,14 @@ from bot_app.tg.callbacks.lessons import (
     EnglishModeDaata,
     ChineseModeData,
     ChooseModeData,
+    PaginationData,
     TotalBackData,
     GetDemoData,
 )
 from shared.settings import S3_BUCKET
 
+START_LIMIT: int = 7
+START_OFFSET: int = 0
 
 lessons_router = Router()
 
@@ -44,17 +47,24 @@ async def get_en_lessons(
 ):
     lessons = await lesson_service.get_lessons(language="en")
 
+    limit = START_LIMIT
+    offset = START_OFFSET
+    await state.update_data({"limit": limit, "offset": offset, "language": "en"})
+
     try:
         await message.edit_text(
             text=messages.LESSONS_MESSAGE,
-            reply_markup=lessons_kb.lessons(lessons=lessons, language="en"),
+            reply_markup=lessons_kb.lessons(
+                lessons=lessons, language="en", limit=limit, offset=offset
+            ),
         )
     except exceptions.TelegramBadRequest as error:
         await message.answer(
             text=messages.LESSONS_MESSAGE,
-            reply_markup=lessons_kb.lessons(lessons=lessons, language="en"),
+            reply_markup=lessons_kb.lessons(
+                lessons=lessons, language="en", limit=limit, offset=offset
+            ),
         )
-    await state.set_data({"language": "en"})
 
 
 @lessons_router.callback_query(EnglishModeDaata.filter())
@@ -63,11 +73,17 @@ async def get_en_lessons(
 ):
     await callback.answer()
     lessons = await lesson_service.get_lessons(language="en")
+
+    limit = START_LIMIT
+    offset = START_OFFSET
+    await state.update_data({"limit": limit, "offset": offset, "language": "en"})
+
     await callback.message.edit_text(
         text=messages.LESSONS_MESSAGE,
-        reply_markup=lessons_kb.lessons(lessons=lessons, language="en"),
+        reply_markup=lessons_kb.lessons(
+            lessons=lessons, language="en", limit=limit, offset=offset
+        ),
     )
-    await state.set_data({"language": "en"})
 
 
 @lessons_router.message(Command(commands=["chinese_lessons"]))
@@ -76,18 +92,24 @@ async def get_en_lessons(
 ):
     lessons = await lesson_service.get_lessons(language="zh")
 
+    limit = START_LIMIT
+    offset = START_OFFSET
+    await state.update_data({"limit": limit, "offset": offset, "language": "zh"})
+
     try:
         await message.edit_text(
             text=messages.LESSONS_MESSAGE,
-            reply_markup=lessons_kb.lessons(lessons=lessons, language="zh"),
+            reply_markup=lessons_kb.lessons(
+                lessons=lessons, language="zh", limit=limit, offset=offset
+            ),
         )
     except exceptions.TelegramBadRequest as error:
         await message.answer(
             text=messages.LESSONS_MESSAGE,
-            reply_markup=lessons_kb.lessons(lessons=lessons, language="zh"),
+            reply_markup=lessons_kb.lessons(
+                lessons=lessons, language="zh", limit=limit, offset=offset
+            ),
         )
-
-    await state.set_data({"language": "zh"})
 
 
 @lessons_router.callback_query(ChineseModeData.filter())
@@ -96,11 +118,17 @@ async def get_en_lessons(
 ):
     await callback.answer()
     lessons = await lesson_service.get_lessons(language="zh")
+
+    limit = START_LIMIT
+    offset = START_OFFSET
+    await state.update_data({"limit": limit, "offset": offset, "language": "zh"})
+
     await callback.message.edit_text(
         text=messages.LESSONS_MESSAGE,
-        reply_markup=lessons_kb.lessons(lessons=lessons, language="zh"),
+        reply_markup=lessons_kb.lessons(
+            lessons=lessons, language="zh", limit=limit, offset=offset
+        ),
     )
-    await state.set_data({"language": "zh"})
 
 
 @lessons_router.callback_query(BackData.filter())
@@ -111,14 +139,59 @@ async def get_back_lessons(
     state: FSMContext,
 ):
     await callback.answer()
-    language = (await state.get_data())["language"]
+
+    data = await state.get_data()
+    offset = data["offset"]
+    limit = data["limit"]
+    language = data["language"]
+
     lessons = await lesson_service.get_lessons(language=language)
 
     await callback.message.delete()
     await callback.message.answer(
         text=messages.LESSONS_MESSAGE,
-        reply_markup=lessons_kb.lessons(lessons=lessons, language=language),
+        reply_markup=lessons_kb.lessons(
+            lessons=lessons, language=language, limit=limit, offset=offset
+        ),
     )
+
+
+@lessons_router.callback_query(PaginationData.filter())
+async def channel_navigation(
+    callback: types.CallbackQuery,
+    callback_data: PaginationData,
+    state: FSMContext,
+    lesson_service: LessonService,
+):
+    await callback.answer()
+    data = await state.get_data()
+    offset = data["offset"]
+    limit = data["limit"]
+    language = data["language"]
+
+    lessons = await lesson_service.get_lessons(language=language)
+
+    if callback_data.direction == "prev":
+        if offset == 0:
+            return
+        offset -= limit
+        await state.update_data({"offset": offset})
+        await callback.message.edit_reply_markup(
+            reply_markup=lessons_kb.lessons(
+                lessons=lessons, language=language, limit=limit, offset=offset
+            )
+        )
+    if callback_data.direction == "next":
+        if offset + limit >= len(lessons):
+            return
+        offset += limit
+
+        await state.update_data({"offset": offset})
+        await callback.message.edit_reply_markup(
+            reply_markup=lessons_kb.lessons(
+                lessons=lessons, language=language, limit=limit, offset=offset
+            )
+        )
 
 
 @lessons_router.callback_query(Lessondata.filter())
@@ -155,12 +228,14 @@ async def get_demo(
     await callback.answer()
     lesson = await lesson_service.get_lesson(lesson_id=callback_data.lesson_id)
 
-    for doc_url in lesson.doc_urls:
+    await callback.message.answer(
+        text=messages.WAIT_FOR_SENDING_MESSAGE.format(name=lesson.name)
+    )
 
+    for demo_url in lesson.demo_urls:
         media, metadata = await order_media_minio.get_safe_objects_by_name(
-            bucket_id=S3_BUCKET, object_name=doc_url
+            bucket_id=S3_BUCKET, object_name=demo_url
         )
-
         await callback.message.answer_document(
-            document=types.BufferedInputFile(file=media, filename=doc_url)
+            document=types.BufferedInputFile(file=media, filename=demo_url),
         )

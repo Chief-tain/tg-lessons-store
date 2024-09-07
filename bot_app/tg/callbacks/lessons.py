@@ -47,3 +47,11 @@ class GetDemoData(CallbackData, prefix="demo"):
 
 class PersonalAccountData(CallbackData, prefix="personal_account"):
     pass
+
+
+class PaginationData(CallbackData, prefix="page"):
+    direction: str
+
+
+class PAPaginationData(CallbackData, prefix="pa_page"):
+    direction: str

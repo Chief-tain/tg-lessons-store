@@ -60,8 +60,8 @@ class Lessons(Base):
     language: Mapped[str] = mapped_column("language", String, nullable=True)
     name: Mapped[str] = mapped_column("name", String, nullable=True)
     description: Mapped[str] = mapped_column("description", String, nullable=True)
-    voice_urls: Mapped[list[str]] = mapped_column(
-        "voice_urls", ARRAY(String), nullable=True, default=[]
+    demo_urls: Mapped[list[str]] = mapped_column(
+        "demo_urls", ARRAY(String), nullable=True, default=[]
     )
     doc_urls: Mapped[list[str]] = mapped_column(
         "doc_urls", ARRAY(String), nullable=True, default=[]

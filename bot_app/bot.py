@@ -27,7 +27,7 @@ def my_json_loads(data: str):
     data_dict = json.loads(data)
     return_data = {}
     for key, value in data_dict.items():
-        if key != "channels":
+        if key != "lessons":
             return_data[key] = value
         else:
             return_data[key] = [ch_val for ch_val in value]
@@ -37,7 +37,7 @@ def my_json_loads(data: str):
 def my_json_dumps(data: dict):
     jsonable_data = {}
     for key, value in data.items():
-        if key != "channels":
+        if key != "lessons":
             jsonable_data[key] = value
         else:
             jsonable_data[key] = [ch_val.__dict__ for ch_val in value]

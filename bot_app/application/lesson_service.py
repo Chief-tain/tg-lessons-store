@@ -1,10 +1,22 @@
+from dataclasses import dataclass
+
 from sqlalchemy import desc, func, select, update, text, between
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from shared.models import Lessons
 
-import logging
+
+@dataclass
+class LessonStructure:
+    id: int
+    language: str
+    name: str
+    description: str
+    demo_urls: list[str]
+    doc_urls: list[str]
+    price: float
+    is_available: bool
 
 
 class LessonService:
@@ -19,7 +31,7 @@ class LessonService:
 
         return lesson
 
-    async def get_lessons(self, language: str):
+    async def get_lessons(self, language: str) -> list[LessonStructure]:
         stmt = (
             select(Lessons)
             .where(Lessons.is_available == True)
@@ -29,7 +41,19 @@ class LessonService:
         lessons = await self.session.scalars(stmt)
         lessons = lessons.fetchall()
 
-        return lessons
+        return [
+            LessonStructure(
+                id=lesson.id,
+                language=lesson.language,
+                name=lesson.name,
+                description=lesson.description,
+                demo_urls=lesson.demo_urls,
+                doc_urls=lesson.doc_urls,
+                price=lesson.price,
+                is_available=lesson.is_available,
+            )
+            for lesson in lessons
+        ]
 
     async def create_lessons(
         self,

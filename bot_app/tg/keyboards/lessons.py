@@ -1,3 +1,5 @@
+from math import ceil
+
 from aiogram.utils.keyboard import (
     InlineKeyboardButton,
     InlineKeyboardMarkup,
@@ -13,6 +15,7 @@ from bot_app.tg.callbacks.lessons import (
     TotalBackData,
     GetDemoData,
     PersonalAccountData,
+    PaginationData,
 )
 
 import bot_app.modules.messages as messages
@@ -53,17 +56,35 @@ def choose_lang_mode():
     return InlineKeyboardMarkup(inline_keyboard=keyboard, resize_keyboard=True)
 
 
-def lessons(lessons: list[Lessons], language: str):
+def lessons(lessons: list[Lessons], language: str, limit: int = 7, offset: int = 0):
+    keyboard = []
 
-    keyboard = [
-        [
-            InlineKeyboardButton(
-                text=f"{messages.language_smile[language]} {lesson.name} - {int(lesson.price)}₽",
-                callback_data=Lessondata(lesson_id=lesson.id).pack(),
-            )
-        ]
-        for lesson in lessons
-    ]
+    for lesson in lessons[offset : offset + limit]:
+        keyboard.append(
+            [
+                InlineKeyboardButton(
+                    text=f"{messages.language_smile[language]} {lesson.name} - {int(lesson.price)}₽",
+                    callback_data=Lessondata(lesson_id=lesson.id).pack(),
+                )
+            ]
+        )
+    if len(lessons) > limit:
+        keyboard.append(
+            [
+                InlineKeyboardButton(
+                    text="<",
+                    callback_data=PaginationData(direction="prev").pack(),
+                ),
+                InlineKeyboardButton(
+                    text=f"[{offset // limit + 1}/{ceil(len(lessons) / limit)}]",
+                    callback_data=PaginationData(direction="keep").pack(),
+                ),
+                InlineKeyboardButton(
+                    text=">",
+                    callback_data=PaginationData(direction="next").pack(),
+                ),
+            ]
+        )
     keyboard.append(
         [
             InlineKeyboardButton(

@@ -4,6 +4,7 @@ from aiogram import F, Router, types, Bot
 from aiogram.types import LabeledPrice
 from aiogram.fsm.context import FSMContext
 
+from bot_app.modules import messages
 from bot_app.tg.callbacks.lessons import BuyLessonData
 from bot_app.application.lesson_service import LessonService
 from bot_app.application.user_service import UserService
@@ -75,17 +76,18 @@ async def processing_pay(
     await user_service.update_user_lessons_list(
         telegram_id=message.from_user.id, lesson_id=lesson.id
     )
-
     await payment_service.create_payment(
         telegram_id=message.from_user.id, lesson_id=lesson.id, price=lesson.price
     )
+    await message.answer(
+        text=messages.WAIT_FOR_SENDING_MESSAGE.format(name=lesson.name)
+    )
 
     for doc_url in lesson.doc_urls:
-
         media, metadata = await order_media_minio.get_safe_objects_by_name(
             bucket_id=S3_BUCKET, object_name=doc_url
         )
-
         await message.answer_document(
-            document=types.BufferedInputFile(file=media, filename=doc_url)
+            document=types.BufferedInputFile(file=media, filename=doc_url),
+            protect_content=True,
         )
