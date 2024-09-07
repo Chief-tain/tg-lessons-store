@@ -205,7 +205,7 @@ async def get_lesson(
     lesson = await lesson_service.get_lesson(lesson_id=callback_data.lesson_id)
 
     media, metadata = await order_media_minio.get_safe_objects_by_name(
-        bucket_id=S3_BUCKET, object_name="2024-08-26 21.49.16.jpg"
+        bucket_id=S3_BUCKET, object_name=lesson.photo_url
     )
 
     await callback.message.delete()
