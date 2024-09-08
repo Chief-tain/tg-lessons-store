@@ -55,3 +55,23 @@ class PaginationData(CallbackData, prefix="page"):
 
 class PAPaginationData(CallbackData, prefix="pa_page"):
     direction: str
+
+
+class AdminLessondata(CallbackData, prefix="admin_lesson"):
+    lesson_id: int
+
+
+class AdminPaginationData(CallbackData, prefix="admin_page"):
+    direction: str
+
+
+class AddLessonData(CallbackData, prefix="add_lesson"):
+    pass
+
+
+class EditLessonData(CallbackData, prefix="edit_lesson"):
+    feature: str
+
+
+class AdminBackData(CallbackData, prefix="admin_back"):
+    pass

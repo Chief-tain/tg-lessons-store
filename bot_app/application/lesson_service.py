@@ -55,6 +55,12 @@ class LessonService:
             for lesson in lessons
         ]
 
+    async def get_all_lessons(self) -> list[Lessons]:
+        stmt = select(Lessons)
+        lessons = await self.session.scalars(stmt)
+        lessons = lessons.fetchall()
+        return lessons
+
     async def create_lessons(
         self,
         name: str,

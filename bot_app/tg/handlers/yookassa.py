@@ -10,6 +10,8 @@ from bot_app.application.lesson_service import LessonService
 from bot_app.application.user_service import UserService
 from bot_app.application.payment_service import PaymentService
 from bot_app.application.minio_service import OrderMediaRepository
+from bot_app.modules import messages
+import bot_app.tg.keyboards.lessons as lessons_kb
 
 from shared.settings import YOO_KASSA_TOKEN, S3_BUCKET
 from shared.models import Lessons
@@ -91,3 +93,7 @@ async def processing_pay(
             document=types.BufferedInputFile(file=media, filename=doc_url),
             protect_content=True,
         )
+
+    await message.answer(
+        text=messages.THANKS_MESSAGE, reply_markup=lessons_kb.choose_lang_mode()
+    )

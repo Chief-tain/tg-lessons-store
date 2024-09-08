@@ -67,3 +67,10 @@ BACK_MESSAGE = "🔙 Назад 🔙"
 DEMO_VERSION_MESSAGE = "❓ Демо-версия ❓"
 BUY_MESSAGE = "✅ Купить ✅"
 BEGIN_MESSAGE = "✅ Начать ✅"
+THANKS_MESSAGE = "⚡ Спасибо за покупку! <b>Приятного изучения!</b> 😊"
+
+ADMIN_START_MESSAGE = (
+    "👋 Привет, <b>{name}</b>! Вы перешли в <b>режим администрирования</b>... 💻"
+)
+ADD_LESSON_MESSAGE = "✅✅✅ Добавить урок ✅✅✅"
+EDIT_LESSON_MESSAGE = "🛠 Выберите поле для <b>редактирования</b> 🛠"
