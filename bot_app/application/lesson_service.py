@@ -36,6 +36,7 @@ class LessonService:
             select(Lessons)
             .where(Lessons.is_available == True)
             .where(Lessons.language == language)
+            .order_by(Lessons.id)
         )
 
         lessons = await self.session.scalars(stmt)
